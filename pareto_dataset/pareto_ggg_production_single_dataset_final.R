@@ -3,7 +3,7 @@ library(BTYDplus)
 library(BTYD)
 library(data.table)
 library(dplyr)
-# library(aws.s3)
+# library(aws.s2)
 
 #' set java memory to 8gb so the large queries can be managed, before importing RJBDC
 options(java.parameters = "-Xmx8g")
@@ -11,9 +11,15 @@ library(RJDBC)
 
 #' set up connection to redshift
 print ("setting up connection to redshift")
+dbuser <- Sys.getenv('DB_USER') 
+dbpass <- Sys.getenv('DB_PASS')
+dbhost <- Sys.getenv('DB_HOST')
+dbport <- Sys.getenv('DB_PORT')
+dbname <- Sys.getenv('DB_NAME')
 driver <- JDBC("com.amazon.redshift.jdbc41.Driver", "RedshiftJDBC41-1.1.9.1009.jar", identifier.quote="`")
-url <- "jdbc:redshift://sp-com-penrosehill-prod1-redshift-cluster.cphnwpu0ffs0.us-east-2.redshift.amazonaws.com:5439/snowplow?ssl=true&sslfactory=com.amazon.redshift.ssl.NonValidatingFactory&user=$USER&password=$PASS"
-conn <- dbConnect(driver, url)
+url <- sprintf("jdbc:redshift://%s:%s/%s?tcpKeepAlive=true&ssl=true&sslfactory=com.amazon.redshift.ssl.NonValidatingFactory", dbhost, dbport, dbname)
+
+conn <- dbConnect(driver, url, dbuser, dbpass)
 
 #' reading data from redshift: analytics_data_science.ltv_orders. This pulls all active users.
 print ("reading data from redshift: analytics_data_science.ltv_orders")
