@@ -3,7 +3,7 @@ library(BTYDplus)
 library(BTYD)
 library(data.table)
 library(dplyr)
-# library(aws.s2)
+library(aws.s3)
 
 #' set java memory to 8gb so the large queries can be managed, before importing RJBDC
 options(java.parameters = "-Xmx8g")
@@ -81,9 +81,14 @@ output_file_name <-sprintf("pareto_ggg_ouput_%s.csv", max_date)
 write.csv(output, output_file_name, row.names = FALSE)
 write.csv(output, "pareto_ggg_ouput.csv", row.names = FALSE)
 
-#' use the operating system command to trigger AWS CLI call to transfer our file to S3
-final_execution_command <- sprintf("aws s3 cp pareto_ggg_ouput_%s.csv s3://ltv-pipeline/final-ltv-files/archive/pareto_ggg_output_%s.csv", max_date, max_date)
-print (final_execution_command)
+
 print ("uploading file to s3")
-system(final_execution_command)
-system("aws s3 cp pareto_ggg_ouput.csv s3://ltv-pipeline/final-ltv-files/pareto_ggg_output.csv")
+s3save(output_file_name, bucket = "ltv-pipeline", object = output)
+s3save("pareto_ggg_ouput.csv", bucket = "ltv-pipeline", object = output)
+
+#' use the operating system command to trigger AWS CLI call to transfer our file to S3
+# final_execution_command <- sprintf("aws s3 cp pareto_ggg_ouput_%s.csv s3://ltv-pipeline/final-ltv-files/archive/pareto_ggg_output_%s.csv", max_date, max_date)
+# print (final_execution_command)
+# print ("uploading file to s3")
+# system(final_execution_command)
+# system("aws s3 cp pareto_ggg_ouput.csv s3://ltv-pipeline/final-ltv-files/pareto_ggg_output.csv")
