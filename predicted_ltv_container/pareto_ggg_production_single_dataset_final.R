@@ -3,7 +3,7 @@ library(BTYDplus)
 library(BTYD)
 library(data.table)
 library(dplyr)
-# library(aws.s2)
+# library(aws.s3)
 
 #' set java memory to 8gb so the large queries can be managed, before importing RJBDC
 options(java.parameters = "-Xmx8g")
@@ -16,6 +16,7 @@ dbpass <- Sys.getenv('DB_PASS')
 dbhost <- Sys.getenv('DB_HOST')
 dbport <- Sys.getenv('DB_PORT')
 dbname <- Sys.getenv('DB_NAME')
+bucket_name <- Sys.getenv('BUCKET_NAME')
 driver <- JDBC("com.amazon.redshift.jdbc41.Driver", "RedshiftJDBC41-1.1.9.1009.jar", identifier.quote="`")
 url <- sprintf("jdbc:redshift://%s:%s/%s?tcpKeepAlive=true&ssl=true&sslfactory=com.amazon.redshift.ssl.NonValidatingFactory", dbhost, dbport, dbname)
 
@@ -82,8 +83,9 @@ write.csv(output, output_file_name, row.names = FALSE)
 write.csv(output, "pareto_ggg_ouput.csv", row.names = FALSE)
 
 #' use the operating system command to trigger AWS CLI call to transfer our file to S3
-final_execution_command <- sprintf("aws s3 cp pareto_ggg_ouput_%s.csv s3://ltv-pipeline/final-ltv-files/archive/pareto_ggg_output_%s.csv", max_date, max_date)
+final_execution_command <- sprintf("aws s3 cp %s s3://%s/final-ltv-files/archive/%s", bucket_name, output_file_name, output_file_name)
 print (final_execution_command)
 print ("uploading file to s3")
 system(final_execution_command)
-system("aws s3 cp pareto_ggg_ouput.csv s3://ltv-pipeline/final-ltv-files/pareto_ggg_output.csv")
+final_file <- sprintf("aws s3 cp pareto_ggg_ouput.csv s3://%s/final-ltv-files/pareto_ggg_output.csv", bucket_name)
+system(final_file)
