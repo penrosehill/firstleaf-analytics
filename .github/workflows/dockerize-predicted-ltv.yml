@@ -41,7 +41,7 @@ jobs:
           ECR_REPOSITORY: predicted_ltv_base_image
           IMAGE_TAG: latest
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG predicted_ltv_container_base_image
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG 
 
       - name: Build, tag, and push image to Amazon ECR
@@ -51,7 +51,7 @@ jobs:
           ECR_REPOSITORY: predicted_ltv
           IMAGE_TAG: latest
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG predicted_ltv_container
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
       
       - name: Logout of Amazon ECR

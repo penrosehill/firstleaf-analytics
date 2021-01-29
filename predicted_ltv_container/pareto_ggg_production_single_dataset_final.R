@@ -78,15 +78,15 @@ output <- rename(output, c("cust"="user_id"))
 
 #' write out the final dataset to csv
 print ("writing out the final output")
-output_file_name <-sprintf("pareto_ggg_ouput_%s.csv", max_date)
+output_file_name <-sprintf("pareto_ggg_output_%s.csv", max_date)
 write.csv(output, output_file_name, row.names = FALSE)
-output_main_file <- "papareto_ggg_ouput.csv"
-write.csv(output, output_file_name, row.names = FALSE)
+output_main_file <- "papareto_ggg_output.csv"
+write.csv(output, output_main_file, row.names = FALSE)
 
 #' use the operating system command to trigger AWS CLI call to transfer our file to S3
 final_execution_command <- sprintf("aws s3 cp %s s3://%s/final-ltv-files/archive/%s", output_file_name, bucket_name, output_file_name)
 print (final_execution_command)
 print ("uploading file to s3")
 system(final_execution_command)
-final_file <- sprintf("aws s3 cp %s s3://%s/final-ltv-files/%s", output_main_file, bucket_name, output_main_file)
-system(final_file)
+final_file_cmd <- sprintf("aws s3 cp %s s3://%s/final-ltv-files/%s", output_main_file, bucket_name, output_main_file)
+system(final_file_cmd)
