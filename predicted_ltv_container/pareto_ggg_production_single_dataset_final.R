@@ -87,6 +87,3 @@ print (final_execution_command)
 print ("uploading file to s3")
 system(final_execution_command)
 system("aws s3 cp pareto_ggg_ouput.csv s3://ltv-pipeline/final-ltv-files/pareto_ggg_output.csv")
-
-#' shut down the EC2 instance from within, after the work is done
-system("sudo poweroff")
