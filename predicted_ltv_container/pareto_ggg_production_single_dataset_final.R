@@ -84,7 +84,7 @@ output_main_file <- "papareto_ggg_ouput.csv"
 write.csv(output, output_file_name, row.names = FALSE)
 
 #' use the operating system command to trigger AWS CLI call to transfer our file to S3
-final_execution_command <- sprintf("aws s3 cp %s s3://%s/final-ltv-files/archive/%s", bucket_name, output_file_name, output_file_name)
+final_execution_command <- sprintf("aws s3 cp %s s3://%s/final-ltv-files/archive/%s", output_file_name, bucket_name, output_file_name)
 print (final_execution_command)
 print ("uploading file to s3")
 system(final_execution_command)
