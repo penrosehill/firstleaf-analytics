@@ -82,7 +82,7 @@ output <- rename(output, c("cust"="user_id"))
 #' write out the final dataset to csv
 print ("writing out the final output")
 output_file_name <- sprintf("pareto_ggg_output_%s.csv", max_date)
-output_main_file <- "papareto_ggg_output.csv"
+output_main_file <- "pareto_ggg_output.csv"
 write.csv(output, output_main_file, row.names = FALSE)
 
 print ("uploading file to s3")
