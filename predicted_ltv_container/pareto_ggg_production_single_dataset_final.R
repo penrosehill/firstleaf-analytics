@@ -3,11 +3,9 @@ library(BTYDplus)
 library(BTYD)
 library(data.table)
 library(dplyr)
-# library(aws.s3)
-
-#' set java memory to 8gb so the large queries can be managed, before importing RJBDC
-options(java.parameters = "-Xmx8g")
-library(RJDBC)
+library("aws.s3")
+library(RPostgres)
+library(redshiftTools)
 
 #' set up connection to redshift
 print ("setting up connection to redshift")
@@ -17,10 +15,15 @@ dbhost <- Sys.getenv('DB_HOST')
 dbport <- Sys.getenv('DB_PORT')
 dbname <- Sys.getenv('DB_NAME')
 bucket_name <- Sys.getenv('BUCKET_NAME')
-driver <- JDBC("com.amazon.redshift.jdbc41.Driver", "RedshiftJDBC41-1.1.9.1009.jar", identifier.quote="`")
-url <- sprintf("jdbc:redshift://%s:%s/%s?tcpKeepAlive=true&ssl=true&sslfactory=com.amazon.redshift.ssl.NonValidatingFactory", dbhost, dbport, dbname)
+dest_table <- Sys.getenv('DESTINATION_TABLE')
 
-conn <- dbConnect(driver, url, dbuser, dbpass)
+conn <- dbConnect(RPostgres::Postgres(), 
+                  dbname=dbname,
+                  host=dbhost,
+                  port=dbport,
+                  user=dbuser, 
+                  password=dbpass,
+                  sslmode='require')
 
 #' reading data from redshift: analytics_data_science.ltv_orders. This pulls all active users.
 print ("reading data from redshift: analytics_data_science.ltv_orders")
@@ -78,15 +81,13 @@ output <- rename(output, c("cust"="user_id"))
 
 #' write out the final dataset to csv
 print ("writing out the final output")
-output_file_name <-sprintf("pareto_ggg_output_%s.csv", max_date)
-write.csv(output, output_file_name, row.names = FALSE)
+output_file_name <- sprintf("pareto_ggg_output_%s.csv", max_date)
 output_main_file <- "papareto_ggg_output.csv"
 write.csv(output, output_main_file, row.names = FALSE)
 
-#' use the operating system command to trigger AWS CLI call to transfer our file to S3
-final_execution_command <- sprintf("aws s3 cp %s s3://%s/final-ltv-files/archive/%s", output_file_name, bucket_name, output_file_name)
-print (final_execution_command)
 print ("uploading file to s3")
-system(final_execution_command)
-final_file_cmd <- sprintf("aws s3 cp %s s3://%s/final-ltv-files/%s", output_main_file, bucket_name, output_main_file)
-system(final_file_cmd)
+put_object(file = output_main_file, object = sprintf('final-ltv-files/archive/%s',output_file_name), bucket = bucket_name)
+put_object(file = output_main_file, object = sprintf('final-ltv-files/%s',output_main_file), bucket = bucket_name)
+
+sprintf ("dump information into %s table", dest_table)
+rs_replace_table(output, dbcon = conn, table_name = dest_table, bucket = bucket_name, split_files = 4)

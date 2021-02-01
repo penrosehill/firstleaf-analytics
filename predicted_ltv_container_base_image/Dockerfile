@@ -1,10 +1,9 @@
 FROM r-base
-RUN apt-get update && apt-get install -y software-properties-common gnupg openjdk-11-jdk openjdk-11-jre python python3-pip
-RUN ln -s /usr/lib/jvm/java-11-openjdk-amd64 /usr/lib/jvm/default-java
+RUN apt-get update && apt-get install -y software-properties-common gnupg libpq-dev file libcurl4 libcurl4-openssl-dev libssl-dev libxml2 libgit2-dev libxml2-dev
 
-RUN ["install2.r", "BTYDplus", "rJava", "RJDBC", "plyr"]
-
-RUN pip install awscli
+RUN ["install2.r", "devtools","BTYDplus", "rJava", "RJDBC", "plyr"]
+RUN ["installGithub.r", "sicarul/redshiftTools", "r-dbi/RPostgres"]
+RUN ["install2.r", "aws.s3", "-r", "https://cloud.R-project.org"]
 
 RUN mkdir -p /usr/local/src/scripts
 WORKDIR /usr/local/src/scripts
