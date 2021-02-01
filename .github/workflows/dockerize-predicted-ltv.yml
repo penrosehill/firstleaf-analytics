@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 10
+          fetch-depth: 100
       
       - uses: marceloprado/has-changed-path@v1
         id: predicted-ltv-changed-base-image
