@@ -90,4 +90,4 @@ put_object(file = output_main_file, object = sprintf('final-ltv-files/archive/%s
 put_object(file = output_main_file, object = sprintf('final-ltv-files/%s',output_main_file), bucket = bucket_name)
 
 sprintf ("dump information into %s table", dest_table)
-rs_replace_table(output, dbcon = conn, table_name = dest_table, bucket = bucket_name, split_files = 4)
+rs_replace_table(output, dbcon = conn, table_name = dest_table, bucket = bucket_name, split_files = 4, region = 'us-east-1')
