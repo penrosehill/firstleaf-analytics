@@ -16,7 +16,7 @@ dbport <- Sys.getenv('DB_PORT')
 dbname <- Sys.getenv('DB_NAME')
 bucket_name <- Sys.getenv('BUCKET_NAME')
 dest_table <- Sys.getenv('DESTINATION_TABLE')
-output_file_name <- Sys.getenv('OUTPUT_CSV_FILENAME')
+output_csv_file_name <- Sys.getenv('OUTPUT_CSV_FILENAME')
 
 conn <- dbConnect(RPostgres::Postgres(), 
                   dbname=dbname,
