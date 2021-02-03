@@ -1,0 +1,172 @@
+{
+  "ipcMode": null,
+  "executionRoleArn": "arn:aws:iam::065012729803:role/ecsTaskExecutionRole_LTV",
+  "containerDefinitions": [
+    {
+      "dnsSearchDomains": null,
+      "environmentFiles": null,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "secretOptions": null,
+        "options": {
+          "awslogs-group": "/ecs/predicted_ltv",
+          "awslogs-region": "us-east-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "entryPoint": null,
+      "portMappings": [],
+      "command": null,
+      "linuxParameters": null,
+      "cpu": 0,
+      "environment": [
+        {
+          "name": "BUCKET_NAME",
+          "value": "ltv-pipeline"
+        },
+        {
+          "name": "DB_HOST",
+          "value": "sp-com-penrosehill-prod1-redshift-cluster.cphnwpu0ffs0.us-east-2.redshift.amazonaws.com"
+        },
+        {
+          "name": "DB_NAME",
+          "value": "snowplow"
+        },
+        {
+          "name": "DB_PORT",
+          "value": "5439"
+        },
+        {
+          "name": "DB_USER",
+          "value": "predicted_ltv_script"
+        },
+        {
+          "name": "DESTINATION_TABLE",
+          "value": "csv_imports.predicted_ltv"
+        },
+        {
+          "name": "OUTPUT_CSV_FILENAME",
+          "value": "pareto_ggg_output"
+        }
+      ],
+      "resourceRequirements": null,
+      "ulimits": null,
+      "dnsServers": null,
+      "mountPoints": [],
+      "workingDirectory": null,
+      "secrets": [
+        {
+          "valueFrom": "predicted_ltv_db_password",
+          "name": "DB_PASS"
+        },
+        {
+          "valueFrom": "predicted_ltv_aws_key",
+          "name": "AWS_ACCESS_KEY_ID"
+        },
+        {
+          "valueFrom": "predicted_ltv_aws_secret",
+          "name": "AWS_SECRET_ACCESS_KEY"
+        }
+      ],
+      "dockerSecurityOptions": null,
+      "memory": null,
+      "memoryReservation": null,
+      "volumesFrom": [],
+      "stopTimeout": null,
+      "image": "065012729803.dkr.ecr.us-east-2.amazonaws.com/predicted_ltv:latest",
+      "startTimeout": null,
+      "firelensConfiguration": null,
+      "dependsOn": null,
+      "disableNetworking": null,
+      "interactive": null,
+      "healthCheck": null,
+      "essential": true,
+      "links": null,
+      "hostname": null,
+      "extraHosts": null,
+      "pseudoTerminal": null,
+      "user": null,
+      "readonlyRootFilesystem": null,
+      "dockerLabels": null,
+      "systemControls": null,
+      "privileged": null,
+      "name": "predicted_ltv"
+    }
+  ],
+  "placementConstraints": [],
+  "memory": "6144",
+  "taskRoleArn": "arn:aws:iam::065012729803:role/ecsTaskExecutionRole_LTV",
+  "compatibilities": [
+    "EC2",
+    "FARGATE"
+  ],
+  "taskDefinitionArn": "arn:aws:ecs:us-east-2:065012729803:task-definition/predicted_ltv:7",
+  "family": "predicted_ltv",
+  "requiresAttributes": [
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "ecs.capability.execution-role-awslogs"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.ecr-auth"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.task-iam-role"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "ecs.capability.execution-role-ecr-pull"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "ecs.capability.secrets.ssm.environment-variables"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "ecs.capability.task-eni"
+    }
+  ],
+  "pidMode": null,
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "networkMode": "awsvpc",
+  "cpu": "2048",
+  "revision": 7,
+  "status": "ACTIVE",
+  "inferenceAccelerators": null,
+  "proxyConfiguration": null,
+  "volumes": []
+}
