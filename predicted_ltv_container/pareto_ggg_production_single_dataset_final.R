@@ -87,8 +87,8 @@ output_main_file <- sprintf("%s.csv", output_csv_file_name)
 write.csv(output, output_main_file, row.names = FALSE)
 
 print ("uploading file to s3")
-put_object(file = output_main_file, object = sprintf('final-ltv-files/archive/%s',output_file_name), bucket = bucket_name, region = 'us-east-1', check_region = FALSE)
-put_object(file = output_main_file, object = sprintf('final-ltv-files/%s',output_main_file), bucket = bucket_name, region = 'us-east-1', check_region = FALSE)
+put_object(file = output_main_file, object = sprintf('final-ltv-files/archive/%s',output_file_name), bucket = bucket_name)
+put_object(file = output_main_file, object = sprintf('final-ltv-files/%s',output_main_file), bucket = bucket_name)
 
 sprintf ("dump information into %s table", dest_table)
-rs_replace_table(output, dbcon = conn, table_name = dest_table, bucket = bucket_name, split_files = 4, region = 'us-east-1')
+rs_replace_table(output, dbcon = conn, table_name = dest_table, bucket = bucket_name, split_files = 4)
